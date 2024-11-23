@@ -7,7 +7,6 @@ export const FetchOld = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  // Fetch posts data function
   const getPostsData = async () => {
     setIsLoading(true);
     try {
@@ -26,7 +25,6 @@ export const FetchOld = () => {
   }, []);
 
   console.log("posts", posts, isLoading, isError);
-  // Conditional rendering based on loading, error, and posts data
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Something went wrong!</p>;
 
