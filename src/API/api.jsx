@@ -30,6 +30,7 @@ export const updatePost = (id) => {
 };
 
 export const fetchUsers = async ({ pageParam }) => {
+  // Page param is set by default with infinite scroll
   try {
     const res = await axios.get(
       `https://api.github.com/users?per_page=10&page=${pageParam}`
