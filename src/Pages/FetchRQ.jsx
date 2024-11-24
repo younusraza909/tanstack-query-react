@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { fetchPosts } from "../API/api";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { deletePost, fetchPosts } from "../API/api";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const FetchRQ = () => {
   const [pageNumber, setPageNumber] = useState(0);
+
+  const queryClient = useQueryClient();
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["posts", pageNumber],
@@ -12,6 +19,16 @@ export const FetchRQ = () => {
     placeholderData: keepPreviousData, // when next data is fetched it wil show previous data instead of loading
     // refetchInterval:1000, // For Polling
     // refetchIntervalInBackground: true, // Polling in background as well else it will not poll when we are out of scope
+  });
+
+  // Mutation Function to delet the post
+  const { mutate } = useMutation({
+    mutationFn: (id) => deletePost(id),
+    onSuccess: (data, id) => {
+      queryClient.setQueryData(["posts", pageNumber], (curElem) => {
+        return curElem?.filter((post) => post.id !== id);
+      });
+    },
   });
 
   if (isPending) return <p>Loading...</p>;
@@ -29,6 +46,7 @@ export const FetchRQ = () => {
                 <p>{title}</p>
                 <p>{body}</p>
               </NavLink>
+              <button onClick={() => mutate(id)}>Delete</button>
             </li>
           );
         })}
