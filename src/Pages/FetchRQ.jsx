@@ -5,6 +5,8 @@ export const FetchRQ = () => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
+    // refetchInterval:1000, // For Polling
+    // refetchIntervalInBackground: true, // Polling in background as well else it will not poll when we are out of scope
   });
 
   if (isPending) return <p>Loading...</p>;
